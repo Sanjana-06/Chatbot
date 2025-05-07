@@ -1,0 +1,4 @@
+fpdf
+pdfplumber
+faiss-cpu
+sentence-transformers
