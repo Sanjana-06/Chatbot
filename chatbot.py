@@ -105,6 +105,9 @@ def chatbot(query, questions, answers, vectorizer, tfidf_matrix):
 
         query_vec = vectorizer.transform([query])
         similarities = cosine_similarity(query_vec, tfidf_matrix)
+
+        print("Similarities: ", similarities)  # Debug: Log similarities to check if they make sense
+
         best_index = similarities.argmax()
         return mask_sensitive_data(answers[best_index])
     except Exception as e:
@@ -124,10 +127,11 @@ if __name__ == "__main__":
                 print("👋 Exiting the chatbot.")
                 break
 
+            # Get the response from the chatbot
             response = chatbot(user_input, questions, answers, vectorizer, tfidf_matrix)
-            print("\n📦 Masked Answer:\n")
-            print(response)
+            print("\n📦 Masked Answer:\n", response)
 
+            # Ask for feedback
             feedback = input("\n💬 Was this helpful? (yes/no/comment):\n> ")
             log_feedback(user_input, feedback)
 
