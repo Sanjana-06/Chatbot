@@ -22,22 +22,30 @@ def extract_qa_from_pdf(pdf_path):
         with pdfplumber.open(pdf_path) as pdf:
             text = "\n".join(page.extract_text() for page in pdf.pages if page.extract_text())
 
-        # Split using separator line (at least 30 underscores in a row)
-        qa_blocks = re.split(r"_+\n", text)
+        # Split using numbered patterns (1. Question:, 2. Question:, etc.)
+        qa_blocks = re.split(r"\n\d+\.\s*Question:", text)
 
         questions, answers = [], []
         for block in qa_blocks:
-            if "Question:" in block and "Answer:" in block:
-                q = block.split("Question:")[1].split("Answer:")[0].strip()
-                a = block.split("Answer:")[1].strip()
-                questions.append(q)
-                answers.append(a)
+            block = block.strip()
+            if not block:
+                continue
+
+            if "Answer:" in block:
+                q_part, a_part = block.split("Answer:", 1)
+                q_text = "Question: " + q_part.strip()
+                a_text = a_part.strip()
+
+                # Attach the API Endpoint URL as part of the question context
+                questions.append(q_text)
+                answers.append(a_text)
 
         print(f"Extracted {len(questions)} questions and {len(answers)} answers from the dataset.")
         return questions, answers
     except Exception as e:
         log_error(f"PDF extraction error: {str(e)}")
         return [], []
+
     
 # ========== Masking ==========
 def mask_sensitive_data(text):
