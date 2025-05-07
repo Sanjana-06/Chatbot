@@ -108,7 +108,13 @@ def chatbot(query, questions, answers, vectorizer, tfidf_matrix):
 
         print("Similarities: ", similarities)  # Debug: Log similarities to check if they make sense
 
+        # Ensure we get the best match using highest similarity index
         best_index = similarities.argmax()
+        
+        # If the best similarity is below a threshold, it means we couldn't find a good match
+        if similarities[0][best_index] < 0.3:
+            return "Sorry, I couldn't find a relevant answer. Please try again with more details."
+
         return mask_sensitive_data(answers[best_index])
     except Exception as e:
         log_error(f"Chatbot processing error: {str(e)}")
