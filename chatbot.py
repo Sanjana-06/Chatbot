@@ -21,7 +21,10 @@ def extract_qa_from_pdf(pdf_path):
     try:
         with pdfplumber.open(pdf_path) as pdf:
             text = "\n".join(page.extract_text() for page in pdf.pages if page.extract_text())
-        qa_blocks = text.split("---")
+
+        # Split using separator line (at least 30 underscores in a row)
+        qa_blocks = re.split(r"_+\n", text)
+
         questions, answers = [], []
         for block in qa_blocks:
             if "Question:" in block and "Answer:" in block:
@@ -29,11 +32,13 @@ def extract_qa_from_pdf(pdf_path):
                 a = block.split("Answer:")[1].strip()
                 questions.append(q)
                 answers.append(a)
+
+        print(f"Extracted {len(questions)} questions and {len(answers)} answers from the dataset.")
         return questions, answers
     except Exception as e:
         log_error(f"PDF extraction error: {str(e)}")
         return [], []
-
+    
 # ========== Masking ==========
 def mask_sensitive_data(text):
     try:
