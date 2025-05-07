@@ -1,9 +1,8 @@
 import pdfplumber
-from sentence_transformers import SentenceTransformer
-import faiss
-import numpy as np
 import re
 import json
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
 
 def extract_qa_from_pdf(pdf_path):
     with pdfplumber.open(pdf_path) as pdf:
@@ -31,22 +30,19 @@ def mask_sensitive_data(answer):
     answer = re.sub(r'{[^{}]+}', mask_json, answer)
     return answer
 
-def chatbot(query, questions, answers, index, model):
-    query_embedding = model.encode([query])
-    D, I = index.search(np.array(query_embedding), k=1)
-    matched_answer = answers[I[0][0]]
-    return mask_sensitive_data(matched_answer)
+def chatbot(query, questions, answers, vectorizer, tfidf_matrix):
+    query_vec = vectorizer.transform([query])
+    similarities = cosine_similarity(query_vec, tfidf_matrix)
+    best_match_index = similarities.argmax()
+    return mask_sensitive_data(answers[best_match_index])
 
 # MAIN PROGRAM
 if __name__ == "__main__":
     questions, answers = extract_qa_from_pdf("qa_dataset.pdf")
-    model = SentenceTransformer("all-MiniLM-L6-v2")
-    embeddings = model.encode(questions)
-    index = faiss.IndexFlatL2(embeddings.shape[1])
-    index.add(np.array(embeddings))
-    
-    # Sample user input
+    vectorizer = TfidfVectorizer()
+    tfidf_matrix = vectorizer.fit_transform(questions)
+
     user_input = input("Ask your API-related question: ")
-    response = chatbot(user_input, questions, answers, index, model)
+    response = chatbot(user_input, questions, answers, vectorizer, tfidf_matrix)
     print("\n📦 Masked Answer:\n")
     print(response)

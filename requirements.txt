@@ -1,4 +1,4 @@
 fpdf
 pdfplumber
-faiss-cpu
-sentence-transformers
+scikit-learn
+
