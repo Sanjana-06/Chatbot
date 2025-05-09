@@ -1,74 +1,87 @@
-🔐 API Chatbot with PDF QA Extraction, Masking & Feedback Logging
-A Python-based interactive chatbot that answers API-related questions extracted from a structured PDF document. It ensures privacy by masking sensitive data, uses TF-IDF and cosine similarity for accurate question matching, and supports user feedback with structured logs.
+# 🔐 API Chatbot with PDF QA Extraction, Masking & Feedback Logging
 
+A Python-based interactive chatbot designed to answer API-related questions extracted from structured PDF documents. It ensures data privacy by masking sensitive information, employs intelligent NLP techniques for question matching, and logs user feedback for continuous improvement.
 
-🚀 Features
-📄 PDF QA Extraction: Automatically extracts questions and answers from structured PDFs.
+---
 
-🔐 Sensitive Data Masking: Masks fields like card numbers, email, SSN, phone, DOB, etc.
+## 🚀 Features
 
-🤖 Intelligent Matching: Uses TF-IDF & cosine similarity for relevant answer detection.
+- 📄 **PDF QA Extraction**  
+  Automatically extracts question-answer pairs from consistently structured PDF documents.
 
-🗃 Logging System:
+- 🔐 **Sensitive Data Masking**  
+  Masks personally identifiable information (PII) such as:
+  - Card numbers
+  - Emails
+  - Social Security Numbers (SSNs)
+  - Phone numbers
+  - Dates of Birth
+  - Passwords, etc.
 
-feedback.logs: User feedback history
+- 🤖 **Intelligent Matching**  
+  Uses **TF-IDF** and **cosine similarity** to find the most relevant answer based on user input.
 
-maskedQ.logs: Tracks masked queries
+- 🗃 **Logging System**  
+  Structured logs for different actions:
+  - `feedback.logs`: Stores user feedback.
+  - `maskedQ.logs`: Tracks masked queries.
+  - `error.logs`: Captures exceptions and errors.
 
-error.logs: Captures exceptions
+- 📬 **Feedback Loop**  
+  Collects user feedback on chatbot responses to improve future interactions.
 
-📬 Feedback Loop: Collects feedback for each response to continuously improve quality.
+---
 
-🧰 Tech Stack
-Category	Tool/Library
-PDF Extraction	pdfplumber
-NLP	scikit-learn (TfidfVectorizer, cosine_similarity)
-Regex Parsing	re
-Logging	Built-in logging via custom file-based logs
-Data Handling	json, os, datetime
+## 🧰 Tech Stack
 
+| Category         | Tool/Library                             |
+|------------------|-------------------------------------------|
+| PDF Extraction   | `pdfplumber`                              |
+| NLP              | `scikit-learn` (`TfidfVectorizer`, `cosine_similarity`) |
+| Regex Parsing    | `re`                                      |
+| Logging          | Python built-in `logging` module          |
+| Data Handling    | `json`, `os`, `datetime`                  |
 
-🧠 How It Works
-Extract Q&A from PDF:
+---
 
-Uses regex to split questions and answers based on patterns like 1. Question: and Answer:.
+## 🧠 How It Works
 
-Initialize TF-IDF:
+1. **PDF Q&A Extraction**  
+   - Uses regex to extract questions and answers from structured PDFs.
+   - Recognizes patterns like `1. Question:` and `Answer:`.
 
-Builds a similarity matrix from extracted questions.
+2. **TF-IDF Initialization**  
+   - Converts extracted questions into TF-IDF vectors.
+   - Computes cosine similarity to find the best match for user queries.
 
-Masking Engine:
+3. **Sensitive Data Masking**  
+   - Applies regex-based rules to mask sensitive fields in both questions and answers.
 
-Identifies and obfuscates fields like card numbers, emails, passwords, mobile numbers, etc.
+4. **User Interaction**  
+   - Accepts user input via CLI.
+   - Returns the most relevant answer with masked sensitive data.
 
-User Interaction:
+5. **Feedback Collection**  
+   - After each interaction, asks for feedback.
+   - Stores it in `feedback.logs` for future analysis.
 
-Takes user input, finds the best matching question using cosine similarity, and responds with the masked answer.
+---
 
-Feedback Collection:
+## ⚠️ Limitations
 
-Prompts user for feedback and logs it in feedback.logs.
+- Assumes consistent structure in the source PDF (e.g., standard Q&A format).
+- Input must be ASCII-compatible (no special encoding).
+- Static similarity threshold (`0.3`) may require tuning for varied datasets.
+- Regex-based masking may miss certain edge-case patterns.
 
+---
 
-⚠️ Limitations
-Assumes consistent structure in the Q&A PDF.
+## 🌱 Future Enhancements
 
-Requires internet-safe input encoding (ASCII-like).
+- [ ] GUI integration using **Tkinter** or **Streamlit**.
+- [ ] Dynamic PDF upload support for live dataset loading.
+- [ ] Multi-language question understanding.
+- [ ] Integrate NLP models like **BERT** for advanced semantic matching.
+- [ ] Automated feedback analysis for self-improving responses.
 
-Similarity threshold is static (0.3) and might require tuning for larger datasets.
-
-Masking uses regex and may not cover edge-case patterns.
-
-🌱 Future Enhancements
-Add GUI for chatbot interface (Tkinter or Streamlit).
-
-Integrate PDF upload feature for dynamic dataset loading.
-
-Support for multiple languages.
-
-Train with actual NLP models like BERT for better understanding.
-
-Automatic feedback analysis to improve response accuracy.
-
-
-
+---
