@@ -1,4 +1,4 @@
-# 🔐 API Chatbot with PDF QA Extraction, Masking & Feedback Logging
+# 🔐Chatbot with PDF QA Extraction, Masking & Feedback Logging
 
 A Python-based interactive chatbot designed to answer API-related questions extracted from structured PDF documents. It ensures data privacy by masking sensitive information, employs intelligent NLP techniques for question matching, and logs user feedback for continuous improvement.
 
